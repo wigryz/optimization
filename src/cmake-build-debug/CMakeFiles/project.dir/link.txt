@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/project.dir/main.cpp.o CMakeFiles/project.dir/matrix.cpp.o CMakeFiles/project.dir/ode_solver.cpp.o CMakeFiles/project.dir/opt_alg.cpp.o CMakeFiles/project.dir/solution.cpp.o -o project 

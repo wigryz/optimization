@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/optimization.dir/main.cpp.o CMakeFiles/optimization.dir/matrix.cpp.o CMakeFiles/optimization.dir/ode_solver.cpp.o CMakeFiles/optimization.dir/opt_alg.cpp.o CMakeFiles/optimization.dir/solution.cpp.o -o optimization 

@@ -1,0 +1,3 @@
+/home/wigryz/programming/studies/optimization/src/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/wigryz/programming/studies/optimization/src/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/wigryz/programming/studies/optimization/src/cmake-build-debug/CMakeFiles/optimization.dir
