@@ -3,13 +3,13 @@
 double *expansion(double x0, double d, double alpha, int Nmax, matrix *ud, matrix *ad)
 {
 	double *p = new double[2];
-	solution X0(???), X1(???);
+	solution X0(???), X1(???); // X0(0), X1(rand?)
 	X0.fit_fun(ud, ad);
 	X1.fit_fun(ud, ad);
-	if (???)
+	if (???) // X0 == X1
 	{
-		???;
-		???;
+		???; // p[0] = X0;
+		???; // p[1] = X1;
 		return p;
 	}
 	if (???) // X1 > X0
@@ -17,7 +17,7 @@ double *expansion(double x0, double d, double alpha, int Nmax, matrix *ud, matri
 		d *= -1;
 		???; // X1 = -X1;
 		X1.fit_fun(ud, ad);
-		if (X1 >= X0)???
+		if (???) // X1 >= X0
 		{
 			???; // p[0] = X1;
 			???; // p[1] = -X1;
@@ -25,12 +25,12 @@ double *expansion(double x0, double d, double alpha, int Nmax, matrix *ud, matri
 		}
 	}
 	solution X2;
-	int i = ???;
+	int i = ???; // 0
 	while (true)
 	{
 		???; // d*= 2;
 		X2.fit_fun(ud, ad);
-		if (???) // i == Nmax
+		if (???) // i > Nmax
 			break;
 		???;
 		???;
