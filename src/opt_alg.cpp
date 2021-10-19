@@ -12,15 +12,15 @@ double *expansion(double x0, double d, double alpha, int Nmax, matrix *ud, matri
 		???;
 		return p;
 	}
-	if (???)
+	if (???) // X1 > X0
 	{
 		d *= -1;
-		???;
+		???; // X1 = -X1;
 		X1.fit_fun(ud, ad);
-		if (???)
+		if (X1 >= X0)???
 		{
-			???;
-			???;
+			???; // p[0] = X1;
+			???; // p[1] = -X1;
 			return p;
 		}
 	}
@@ -28,9 +28,9 @@ double *expansion(double x0, double d, double alpha, int Nmax, matrix *ud, matri
 	int i = ???;
 	while (true)
 	{
-		???;
+		???; // d*= 2;
 		X2.fit_fun(ud, ad);
-		if (???)
+		if (???) // i == Nmax
 			break;
 		???;
 		???;
