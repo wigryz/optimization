@@ -1,4 +1,5 @@
 #include"opt_alg.h"
+const double GOLDEN_RATIO = (1+sqrt(5))*0.5;
 #if LAB_NO>1
 double *expansion(double x0, double d, double alpha, int Nmax, matrix *ud, matrix *ad)
 {
@@ -40,24 +41,33 @@ double *expansion(double x0, double d, double alpha, int Nmax, matrix *ud, matri
 	return p;
 }
 
+double Binet(double F){
+    return (log10(F* sqrt(5) + 0.5)/log10(GOLDEN_RATIO));
+}
+
 solution fib(double a, double b, double epsilon, matrix *ud, matrix *ad)
 {
-	int n = ???;
+	int n = static_cast<int>(Binet((b-a)/epsilon));
 	int *F = new int[n] {1, 1};
-	for (int i = 2; i < n; ++i)
-		F[i] = ???;
-	solution A(???), B(???), C, D;
-	C.x = ???;
-	D.x = ???;
+	for (int i = 2; i < n; ++i){
+		F[i] = F[i-2]+F[i-1];
+        }
+	solution A(a), B(b), C, D;
+	C.x = B.x - F[n-2]/F[n-1]*(B.x-A.x);
+	D.x = A.x + B.x - C.x;
 	C.fit_fun(ud, ad);
 	D.fit_fun(ud, ad);
 	for (int i = 0; i <= n - 3; ++i)
 	{
-		if (???)
-			???;
-		else
-			???;
-		C.x = ???;
+		if (C.y < D.y) {
+//            A.x = A.x;
+            B.x = D.x;
+        }
+		else{
+//            B.x = B.x;
+            A.x = C.x;
+        }
+		C.x = B.x - ;
 		D.x = ???;
 		C.fit_fun(ud, ad);
 		D.fit_fun(ud, ad);
