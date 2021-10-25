@@ -7,54 +7,98 @@ AGH University of Science and Technology
 
 #include"opt_alg.h"
 
-int main()
-{
-	try
-	{
-		cout << "LAB NUMBER " << LAB_NO << endl;
-		cout << "LAB PART " << LAB_PART << endl << endl;
-#if LAB_NO==0
-		
-#elif LAB_NO==1 && LAB_PART==1
+int main() {
+    try {
+        cout << "LAB NUMBER " << LAB_NO << endl;
+        cout << "LAB PART " << LAB_PART << endl << endl;
+#if LAB_NO == 0
 
-#elif LAB_NO==1 && LAB_PART==2
-		
+#elif LAB_NO == 1 && LAB_PART == 1
+        double t0 = 0, dt = 0.1, tend = 50;
+        matrix Y0 = matrix(2, new double[2]{0, 0}); //pierwsza wartosc x1 od 0, druga wartosc predkosc od 0(??)
+        matrix *Y = solve_ode(t0, dt, tend,
+                              Y0); //funkcja solve_ode zwraca dwie macierze. Pierwsza to czas, druga rozwi�zania w kroku czasowym
+        matrix out = hcat(Y[0], Y[1]);
+        ofstream sout("wyniki.csv");
+        sout << out;
+        sout.close();
+
+
+#elif LAB_NO == 1 && LAB_PART == 2
+
 #elif LAB_NO==2 && LAB_PART==1
-		
+        double x0 = -20, d = 1, alpha = 2, epsilon = 1e-5, gamma = 1e-200;
+        int Nmax = 1000;
+
+        //3 r�zne warto��i alfa - 100 pr�b dla ka�dego od -100 do 100 dla losowych x0
+        double *p = expansion(x0, d, alpha, Nmax);
+        cout << p[0] << "\t" << p[1]<<endl;
+
+        solution::clear_calls();
+
+        solution opt_F = fib(p[0], p[1], epsilon);
+        cout << opt_F;
+
+        solution::clear_calls();
+
+        solution opt_L = lag(p[0], p[1], epsilon, gamma, Nmax);
+        cout << opt_L;
+
+
 #elif LAB_NO==2 && LAB_PART==2
-		
+        double x0 = -20, d = 1, alpha = 2, epsilon = 1e-5, gamma = 1e-200;
+        int Nmax = 1000;
+
+        matrix ab_F(1, 1, 200);
+
+        solution opt_F = fib(-100, 100, epsilon, &ab_F);
+        std::cout << ab_F;
+
+        solution::clear_calls();
+
+
+        /*matrix ab_L(1, 1, 200);
+
+        solution::clear_calls();
+
+        solution opt_L = lag(-100, 100, epsilon, gamma, Nmax, &ab_L);
+        std::cout << ab_L;*/
+
+
 #elif LAB_NO==2 && LAB_PART==3
-		
+        solution test(0.001);
+        test.fit_fun();
+        cout << test;
+
 #elif LAB_NO==3 && LAB_PART==1
-		
+
 #elif LAB_NO==3 && LAB_PART==2
-		
+
 #elif LAB_NO==3 && LAB_PART==3
-		
+
 #elif LAB_NO==4 && LAB_PART==1
-		
+
 #elif LAB_NO==4 && LAB_PART==2
-		
+
 #elif LAB_NO==5 && LAB_PART==1
-		
+
 #elif LAB_NO==5 && LAB_PART==2
-		
+
 #elif LAB_NO==5 && LAB_PART==3
-		
+
 #elif LAB_NO==6 && LAB_PART==1
-		
+
 #elif LAB_NO==6 && LAB_PART==2
-		
+
 #elif LAB_NO==7 && LAB_PART==1
-		
+
 #elif LAB_NO==7 && LAB_PART==2
-		
+
 #endif
-	}
-	catch (char * EX_INFO)
-	{
-		cout << EX_INFO << endl;
-	}
-    getchar();
-	return 0;
+    }
+    catch (char *EX_INFO) {
+        cout << EX_INFO << endl;
+    }
+    system("pause");
+    return 0;
 }
