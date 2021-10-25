@@ -6,41 +6,45 @@ const double SQRTOF5 = sqrt(5);
 
 double *expansion(double x0, double d, double alpha, int Nmax, matrix *ud, matrix *ad) {
     double *p = new double[2];
-    solution X0(???), X1( ???);
+    solution X0(0), X1(1); // X0(0), X1(rand?)
     X0.fit_fun(ud, ad);
     X1.fit_fun(ud, ad);
-    if (???)
+    if (X0.y == X1.y) // X0 == X1
     {
-        ???;
-        ???;
+        p[0] = X0.x(0);
+        p[1] = X1.x(0);
         return p;
     }
-    if (???)
+    if (X1.y > X0.y) // tu
     {
         d *= -1;
-        ???;
+        X1.x = -X1.x; // X1 = -X1;
         X1.fit_fun(ud, ad);
-        if (???)
+        if (X1.y >= X0.y) // X1 >= X0
         {
-            ???;
-            ???;
+            p[0] = X1.x(0); // p[0] = X1;
+            p[1] = -X1.x(0); // p[1] = -X1;
             return p;
         }
     }
     solution X2;
-    int i = ???;
+    int i = 0; // 0
     while (true) {
-        ???;
+        d *= 2;
         X2.fit_fun(ud, ad);
-        if (???)
-        break;
-        ???;
-        ???;
+        if (X1.y <= X2.y  || solution::f_calls > Nmax) // i > Nmax
+            break;
+        X0 = X1;
+        X1 = X2;
         ++i;
     }
-    d > 0 ? ??? : ???;
+    if(d > 0) {
+
+    }
+    d > 0 ?  : ???;
     return p;
 }
+
 
 double Bidet(double F) {
     return (log10(F * SQRTOF5 + 0.5) / log10(GOLDEN_RATIO));
