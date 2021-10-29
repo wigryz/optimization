@@ -26,45 +26,82 @@ int main() {
 
 #elif LAB_NO == 1 && LAB_PART == 2
 
-#elif LAB_NO==2 && LAB_PART==1
+#elif LAB_NO == 2 && LAB_PART == 1
         double x0;
-        double alpha = 0.5 ,d = 1, epsilon = 1e-5, gamma = 1e-200;
+        double alpha = 1.0, d = 1, epsilon = 1e-5, gamma = 1e-200;
         int Nmax = 1000;
 
-        matrix tab(300,12);
-        for (int i = 1; i <= 3; i++) {
+        double diffBA[3] = {0.0, 0.0, 0.0};
+        int l_wywolan[3] = {0,0,0};
+
+        double min_glob_fibx[3] = {0.0, 0.0, 0.0};
+        double min_lok_fibx[3] = {0.0, 0.0, 0.0};
+        double min_glob_fiby[3] = {0.0, 0.0, 0.0};
+        double min_lok_fiby[3] = {0.0, 0.0, 0.0};
+        int l_fib[3] = {0,0,0};
+
+
+        double min_glob_lagx[3] = {0.0, 0.0, 0.0};
+        double min_lok_lagx[3] = {0.0, 0.0, 0.0};
+        double min_glob_lagy[3] = {0.0, 0.0, 0.0};
+        double min_lok_lagy[3] = {0.0, 0.0, 0.0};
+        int l_lag[3] = {0,0,0};
+
+        matrix tab(300, 12);
+        for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 100; j++) {
-                x0 = 200.0*rand_mat(1, 1)()-100.0; //losowanko z przedzialu od -100 do 100
-                double* p = expansion(x0, d, alpha, Nmax); //metoda exp
-                tab(j*i, 0) = x0; //poczatkowy (losujemy)
-                tab(j*i,1) = p[0]; //przedzial obliczony metoda exp
-                tab(j*i,2) = p[1];
-                tab(j*i, 3) = solution::f_calls; //ilosc wywołań 
+                x0 = 200.0 * rand_mat(1, 1)() - 100.0; //losowanko z przedzialu od -100 do 100
+                double *p = expansion(x0, d, alpha, Nmax); //metoda exp
+                tab(i * 100 + j, 0) = x0; //poczatkowy (losujemy)
+                tab(i * 100 + j, 1) = p[0]; //przedzial obliczony metoda exp
+                tab(i * 100 + j, 2) = p[1];
+                tab(i * 100 + j, 3) = solution::f_calls; //ilosc wywołań
+                diffBA[i] += p[1] - p[0];
+                l_wywolan[i] += solution::f_calls;
                 solution::clear_calls(); //sprzątanko
 
                 solution opt_F = fib(p[0], p[1], epsilon);
-                tab(j + i, 4) = opt_F.x();
-                tab(j + i, 5) = opt_F.y();
-                tab(j + i, 6) = solution::f_calls;
+                tab(i * 100 + j, 4) = opt_F.x();
+                tab(i * 100 + j, 5) = opt_F.y();
+                tab(i * 100 + j, 6) = solution::f_calls;
+                tab(i * 100 + j, 7) = opt_F.y() < 0.5 ? 1 : 0; //
+//                std::cout << i << " => " << opt_F << std::endl;
+                min_glob_fibx[i] += opt_F.x();
+                min_lok_fibx[i] = opt_F.y();
+                min_glob_fiby[i] = opt_F.x();
+                min_lok_fiby[i] = opt_F.y();
+                l_fib[i] += solution::f_calls;
                 solution::clear_calls();
 
                 solution opt_L = lag(p[0], p[1], epsilon, gamma, Nmax);
-                tab(j + i, 7) = opt_L.x();
-                tab(j + i, 8) = opt_L.y();
-                tab(j + i, 9) = solution::f_calls;
+                tab(i * 100 + j, 8) = opt_L.x();
+                tab(i * 100 + j, 9) = opt_L.y();
+                tab(i * 100 + j, 10) = solution::f_calls;
+
+                min_glob_lagx[i] += opt_L.x();
+                min_lok_lagx[i] = opt_L.y();
+                min_glob_lagy[i] = opt_L.x();
+                min_lok_lagy[i] = opt_L.y();
+                l_fib[i] += solution::f_calls;
+                tab(i * 100 + j, 11) = opt_F.y() < 0.5 ? 1 : 0; //liczba wywolan funkcji celu
                 solution::clear_calls();
             }
 
-            alpha += 0, 5;
+            alpha += 0.5;
         }
         ofstream sout("wyniki.csv");
 
         sout << tab;
+        for(int i=0 ; i < 3 ; i++) {
+            std::cout << i << ". -> b-a eksp: " << diffBA[i] / 300.0 << " calls: " << (double) l_wywolan[i] / 300.0 << std::endl;
+            std::cout << i << ". fib gl -> x*: " << min_glob_fibx[i] / 300.0 << " y*: " << min_glob_fiby[i] / 300.0 << " f_calls " << (double)l_fib[i]/300.0 << std::endl;
+            std::cout << i << ". lab gl -> x*: " << min_glob_lagx[i] / 300.0 << " y*: " << min_glob_lagy[i] / 300.0 << " f_calls " << (double)l_lag[i]/300.0 << std::endl;
+        }
         sout.close();
 
 
-#elif LAB_NO==2 && LAB_PART==2
-        
+#elif LAB_NO == 2 && LAB_PART == 2
+
         double x0 = -20, d = 1, alpha = 2, epsilon = 1e-5, gamma = 1e-200;
         int Nmax = 1000;
 
@@ -77,13 +114,12 @@ int main() {
                 tab(j , 2) = solution::f_calls;
                 solution :: clear_calls();
                       
-                soluti,pt_L = lag(-100, 100, epsilon, gamma, Nmax);
+                solution opt_L = lag(-100, 100, epsilon, gamma, Nmax);
                 tab(j , 4) = opt_L.x();
                 tab(j , 5) = opt_L.y();
                 tab(j , 6) = solution::f_calls;
                 solution::clear_calls();
             }
-        }
         ofstream sout("wyniki2.csv");
         sout << tab;
         sout.close();

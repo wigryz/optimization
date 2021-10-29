@@ -24,29 +24,17 @@ fstream
 random
 -
 
-/home/wigryz/programming/studies/optimization/src/ode_solver.cpp
-ode_solver.h
-/home/wigryz/programming/studies/optimization/src/ode_solver.h
-
 /home/wigryz/programming/studies/optimization/src/ode_solver.h
 matrix.h
 /home/wigryz/programming/studies/optimization/src/matrix.h
 lab_no.h
 /home/wigryz/programming/studies/optimization/src/lab_no.h
 
-/home/wigryz/programming/studies/optimization/src/opt_alg.cpp
-opt_alg.h
-/home/wigryz/programming/studies/optimization/src/opt_alg.h
-
 /home/wigryz/programming/studies/optimization/src/opt_alg.h
 solution.h
 /home/wigryz/programming/studies/optimization/src/solution.h
 chrono
 -
-
-/home/wigryz/programming/studies/optimization/src/solution.cpp
-solution.h
-/home/wigryz/programming/studies/optimization/src/solution.h
 
 /home/wigryz/programming/studies/optimization/src/solution.h
 ode_solver.h

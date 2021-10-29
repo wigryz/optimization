@@ -51,9 +51,6 @@ double Bidet(double F) {
     return (log10(F * SQRTOF5 + 0.5) / log10(GOLDEN_RATIO));
 }
 
-double fi(double n) {
-    return 1 / SQRTOF5 * (pow((1 + SQRTOF5) / 2, n) - pow((1 - SQRTOF5) / 2, n));
-}
 solution fib(double a, double b, double epsilon, matrix *ud, matrix *ad) {
     int n = static_cast<int>(ceil(Bidet((b - a) / epsilon)));
     int *F = new int[n]{1, 1};
