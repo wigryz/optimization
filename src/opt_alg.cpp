@@ -5,6 +5,7 @@ const double SQRTOF5 = sqrt(5);
 #if LAB_NO > 1
 
 double *expansion(double x0, double d, double alpha, int Nmax, matrix *ud, matrix *ad) {
+
     double *p = new double[2];
     solution X0(x0), X1(x0 + d);
     X0.fit_fun(ud, ad);
@@ -13,6 +14,7 @@ double *expansion(double x0, double d, double alpha, int Nmax, matrix *ud, matri
     {
         p[0] = X0.x(0);
         p[1] = X1.x(0);
+
         return p;
     }
     if (X1.y > X0.y) // tu
@@ -24,6 +26,7 @@ double *expansion(double x0, double d, double alpha, int Nmax, matrix *ud, matri
         {
             p[0] = X1.x(0);
             p[1] = X1.x(0) - d;
+
             return p;
         }
     }
@@ -39,6 +42,7 @@ double *expansion(double x0, double d, double alpha, int Nmax, matrix *ud, matri
         ++i;
     }
     d > 0 ? p[0] = X0.x(), p[1] = X2.x() : (p[0] = X2.x(), p[1] = X0.x());
+
     return p;
 }
 
