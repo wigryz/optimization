@@ -127,32 +127,32 @@ solution lag(double a, double b, double epsilon, double gamma, int Nmax, matrix 
 #if LAB_NO > 2
 solution HJ(matrix x0, double s, double alpha, double epsilon, int Nmax, matrix *ud, matrix *ad)
 {
-    solution XB(???), XB_old, X;
+    solution XB(x0), XB_old, X;
     XB.fit_fun(ud, ad);
     while (true)
     {
         X = HJ_trial(XB, s, ud, ad);
-        if (???)
+        if (X.y < XB.y)
         {
             while (true)
             {
-                ???;
-                ???;
+                solution XBprev = XB;
+                XB = X;
 #if LAB_NO==3 && LAB_PART==2
-                ???
+                X.x = 2 * XB.x - XBprev.x;
 #endif
-                ???
+                //??? //nie wiem co tu powinno byc
                 X.fit_fun(ud, ad);
                 X = HJ_trial(X, s, ud, ad);
-                if (???)
+                if (X.y >= XB.y)
                     break;
-                if (???)
+                if (???) // tutaj tez nie wiem
                     return XB;
             }
         }
         else
-            ???;
-        if (???)
+            s = alpha * s;
+        if (s < epsilon)
             return XB;
     }
 }
@@ -164,16 +164,16 @@ solution HJ_trial(solution XB, double s, matrix *ud, matrix *ad)
     solution X;
     for (int i = 0; i < n; ++i)
     {
-        X.x = ???
+        X.x = XB.x + s * D(i);
         X.fit_fun(ud, ad);
-        if (???)
-            ???;
+        if (X.y < XB.y)
+            return X;
         else
         {
-            X.x = ???
+            X.x = XB.x - s * D(i);
             X.fit_fun(ud, ad);
-            if (???)
-                ???;
+            if (X.y < XB.y)
+                return X;
         }
     }
     return XB;
