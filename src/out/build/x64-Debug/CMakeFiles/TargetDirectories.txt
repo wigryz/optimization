@@ -1,0 +1,3 @@
+C:/Users/dominika.lazarowicz/source/repos/priv/optimization/src/out/build/x64-Debug/CMakeFiles/optimization.dir
+C:/Users/dominika.lazarowicz/source/repos/priv/optimization/src/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/dominika.lazarowicz/source/repos/priv/optimization/src/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir

@@ -34,3 +34,5 @@
 # IDEA
 
 .idea
+/out/build/x64-Debug
+/.vs/optimization/v16
