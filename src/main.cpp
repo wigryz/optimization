@@ -156,7 +156,18 @@ int main() {
         sout << SYM;
 
 #elif LAB_NO==3 && LAB_PART==1
+        double s = 0.1, alphaHJ = 0.5, alphaR = 2, beta = 0.5, epsilon = 1e-3;
+		int Nmax = 5000;
+		//matrix x0 = 2 * rand_mat(2, 1) - 1;
+		matrix s0(2, 1, s);
+		matrix x0(2, 1, -0.1);
 
+		solution optHJ = HJ(x0, s, alphaHJ, epsilon, Nmax);
+		cout << optHJ << endl << endl;
+		solution::clear_calls();
+		solution optR = Rosen(x0, s0, alphaR, beta, epsilon, Nmax);
+		cout << optR << endl << endl;
+		solution::clear_calls();
 #elif LAB_NO==3 && LAB_PART==2
 
 #elif LAB_NO==3 && LAB_PART==3
