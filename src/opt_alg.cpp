@@ -14,7 +14,6 @@ double *expansion(double x0, double d, double alpha, int Nmax, matrix *ud, matri
     {
         p[0] = X0.x(0);
         p[1] = X1.x(0);
-
         return p;
     }
     if (X1.y > X0.y) // tu
