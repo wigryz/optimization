@@ -69,6 +69,8 @@ void solution::fit_fun(matrix *ud, matrix *ad) {
 
 #elif LAB_NO == 3 && (LAB_PART == 1 || LAB_PART == 2)
     y = pow(x(0), 2) + pow(x(1), 2) - cos(2.5 * 3.14 * x(0)) - cos(2.5 * 3.14 * x(1)) + 2;
+
+
 #elif LAB_NO == 3 && LAB_PART == 3
 
 #elif LAB_NO == 4 && LAB_PART == 1

@@ -156,18 +156,30 @@ int main() {
         sout << SYM;
 
 #elif LAB_NO==3 && LAB_PART==1
-        double s = 0.1, alphaHJ = 0.5, alphaR = 2, beta = 0.5, epsilon = 1e-3;
-		int Nmax = 5000;
-		//matrix x0 = 2 * rand_mat(2, 1) - 1;
-		matrix s0(2, 1, s);
-		matrix x0(2, 1, -0.1);
+        srand(time(NULL));
+        ofstream sout("wynikiPart1.csv");
+        double s = 0.1, alphaHJ = 0.5, alphaR = 3, beta = 0.5, epsilon = 1e-3;
+        int Nmax = 5000;
 
-		solution optHJ = HJ(x0, s, alphaHJ, epsilon, Nmax);
-		cout << optHJ << endl << endl;
-		solution::clear_calls();
-		solution optR = Rosen(x0, s0, alphaR, beta, epsilon, Nmax);
-		cout << optR << endl << endl;
-		solution::clear_calls();
+        for (int h = 0; h < 3; h++) {
+            double s = (double)rand() / RAND_MAX;
+            matrix s0(2, 1, s);
+
+            cout << "Dlugosc kroku dla iteracji " << h << ".: " << s << "\n";
+            for (int i = 0; i < 100; i++) {
+                matrix x0 = 2 * rand_mat(2, 1) - 1;
+
+                solution optHJ = HJ(x0, s, alphaHJ, epsilon, Nmax);
+                sout << x0(0, 0) << ";" << x0(1, 0) << ";" << optHJ.x(0) << ";" << optHJ.x(1) << ";" << optHJ.y(0) << ";"
+                    << solution::f_calls << ";" << ((optHJ.y(0) < 0.000001) ? 1 : 0) << ";";
+                solution::clear_calls();
+
+                solution optR = Rosen(x0, s0, alphaR, beta, epsilon, Nmax);
+                sout << optR.x(0) << ";" << optR.x(1) << ";" << optR.y(0) << ";"
+                    << solution::f_calls << ";" << ((optHJ.y(0) < 0.000001) ? 1 : 0) << "\n";
+                solution::clear_calls();
+            }
+        }
 #elif LAB_NO==3 && LAB_PART==2
 
 #elif LAB_NO==3 && LAB_PART==3
@@ -195,6 +207,5 @@ int main() {
     catch (char *EX_INFO) {
         cout << EX_INFO << endl;
     }
-    system("pause");
     return 0;
 }
