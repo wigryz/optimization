@@ -138,7 +138,7 @@ solution HJ(matrix x0, double s, double alpha, double epsilon, int Nmax, matrix 
                 XB_old = XB;
                 XB = X;
 #if LAB_NO==3 && LAB_PART==2
-                // ???
+                (*ud).add_row(trans(XB.x));
 #endif
                 X.x = 2 * XB.x - XB_old.x;
                 X.fit_fun(ud, ad);
@@ -151,7 +151,7 @@ solution HJ(matrix x0, double s, double alpha, double epsilon, int Nmax, matrix 
         }
         else
             s *= alpha;
-        if (s < epsilon)
+        if (s < epsilon || solution::f_calls > Nmax)
             return XB;
     }
 }
@@ -163,16 +163,16 @@ solution HJ_trial(solution XB, double s, matrix *ud, matrix *ad)
     solution X;
     for (int i = 0; i < n; ++i)
     {
-        X.x = XB.x + s * D[i]; //D(i)?
+        X.x = XB.x + s * D[i];
         X.fit_fun(ud, ad);
         if (X.y < XB.y)
-            XB = X; //return X;
+            XB = X;
         else
         {
-            X.x = XB.x - s * D[i]; //D(i)
+            X.x = XB.x - s * D[i];
             X.fit_fun(ud, ad);
             if (X.y < XB.y)
-                XB = X; //return X;
+                XB = X;
         }
     }
     return XB;
@@ -203,7 +203,7 @@ solution Rosen(matrix x0, matrix s0, double alpha, double beta, double epsilon, 
             }
         }
 #if LAB_NO==3 && LAB_PART==2
-        //???
+        (*ud).add_row(trans(X.x));
 #endif
         bool change = true;
         for (int i = 0; i < n; ++i)

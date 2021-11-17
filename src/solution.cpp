@@ -72,7 +72,17 @@ void solution::fit_fun(matrix *ud, matrix *ad) {
 
 
 #elif LAB_NO == 3 && LAB_PART == 3
+    matrix Y0(2, 1);
+    matrix *Y = solve_ode(0, 0.1, 100, Y0, ud, &x);
 
+    double a_ref = 3.14, o_ref = 0;
+    int n = get_len(Y[0]);
+    y = 0;
+    for (int i = 0; i < n; i++) {
+        y = y + 10 * pow(a_ref - Y[1](i, 0), 2) + pow(o_ref - Y[1](i, 1), 2) + pow(x(0)*(a_ref - Y[1](i, 0)) + x(1)*(o_ref-Y[1](i, 1)), 2);
+    }
+
+    y =  y * 0.1;
 #elif LAB_NO == 4 && LAB_PART == 1
 
 #elif LAB_NO == 4 && LAB_PART == 2
