@@ -16,9 +16,9 @@ int main() {
 #elif LAB_NO == 1 && LAB_PART == 1
         double t0 = 0, s = 0.1, tend = 50;
         matrix Y0 = matrix(2, new double[2]{0, 0}); //pierwsza wartosc x1 od 0, druga wartosc predkosc od 0(??)
-        matrix *Y = solve_ode(t0, s, tend,
+        matrix *Y1 = solve_ode(t0, s, tend,
                               Y0); //funkcja solve_ode zwraca dwie macierze. Pierwsza to czas, druga rozwi�zania w kroku czasowym
-        matrix out = hcat(Y[0], Y[1]);
+        matrix out = hcat(Y1[0], Y1[1]);
         ofstream sout("wyniki.csv");
         sout << out;
         sout.close();
@@ -186,18 +186,15 @@ int main() {
         int Nmax = 5000;
         matrix x0 = 2 * rand_mat(2, 1) - 1;
         matrix s0(2, 1, s);
-//        matrix x0(2, 1, -0.1);
 
         matrix XSHJ = trans(x0);
         matrix XSRosen = trans(x0);
 
         solution optHJ = HJ(x0, s, alphaHJ, epsilon, Nmax, &XSHJ);
-//        cout << optHJ << endl;
         cout << XSHJ << endl << endl;
 
         solution::clear_calls();
         solution optR = Rosen(x0, s0, alphaR, beta, epsilon, Nmax, &XSRosen);
-//        cout << optR << endl;
         cout << XSRosen << endl << endl;
         solution::clear_calls();
 #elif LAB_NO==3 && LAB_PART==3
@@ -213,6 +210,19 @@ int main() {
         solution optR = Rosen(x0, s0, alphaR, beta, epsilon, Nmax);
         cout << "Rosen:\n" << optR << endl;
         solution::clear_calls();
+
+        matrix Y0(2, 1);
+        matrix ud;
+        matrix* Y1 = solve_ode(0, 0.1, 100, Y0, &ud, &optHJ.x);
+        matrix ud2;
+        matrix* Y2 = solve_ode(0, 0.1, 100, Y0, &ud2, &optR.x);
+        ofstream S("simHJ.csv");
+        S << hcat(Y1[0], Y1[1]);
+        S.close();
+        S.open("simR.csv");
+        S << hcat(Y2[0], Y2[1]);
+        S.close();
+
 #elif LAB_NO==4 && LAB_PART==1
 
 #elif LAB_NO==4 && LAB_PART==2
