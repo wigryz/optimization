@@ -125,7 +125,7 @@ int main() {
         sout.close();
 
 
-#elif LAB_NO==2 && LAB_PART==3
+#elif LAB_NO == 2 && LAB_PART == 3
 
         //ustalany zmienne
         double alpha = 0.5, d = 1, epsilon = 1e-5, gamma = 1e-200;
@@ -155,7 +155,7 @@ int main() {
         ofstream sout("wyniki1.csv");
         sout << SYM;
 
-#elif LAB_NO==3 && LAB_PART==1
+#elif LAB_NO == 3 && LAB_PART == 1
         srand(time(NULL));
         ofstream sout("wynikiPart1.csv");
         double s = 0.1, alphaHJ = 0.5, alphaR = 3, beta = 0.5, epsilon = 1e-3;
@@ -180,7 +180,7 @@ int main() {
                 solution::clear_calls();
             }
         }
-#elif LAB_NO==3 && LAB_PART==2
+#elif LAB_NO == 3 && LAB_PART == 2
         ofstream sout("wynikiPart2.csv");
         double s = 0.1, alphaHJ = 0.5, alphaR = 2, beta = 0.5, epsilon = 1e-3;
         int Nmax = 5000;
@@ -197,7 +197,7 @@ int main() {
         solution optR = Rosen(x0, s0, alphaR, beta, epsilon, Nmax, &XSRosen);
         cout << XSRosen << endl << endl;
         solution::clear_calls();
-#elif LAB_NO==3 && LAB_PART==3
+#elif LAB_NO == 3 && LAB_PART == 3
         double s = 0.1, alphaHJ = 0.5, alphaR = 2, beta = 0.5, epsilon = 1e-3;
         int Nmax = 5000;
         matrix x0 = 10 * rand_mat(2, 1);
@@ -223,11 +223,58 @@ int main() {
         S << hcat(Y2[0], Y2[1]);
         S.close();
 
-#elif LAB_NO==4 && LAB_PART==1
-
-#elif LAB_NO==4 && LAB_PART==2
-
-#elif LAB_NO==5 && LAB_PART==1
+#elif LAB_NO == 4 && LAB_PART == 1
+        matrix x0, TAB1(300, 12);
+        double a[3] = { 4, 4.4934, 5 }, c_ex = 1, c_in = 10, dc_ex = 2, dc_in = 0.5, epsilon = 1e-10;
+        int Nmax = 10000;
+        solution opt;
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 100; j++) {
+                do
+                    x0 = 5 * rand_mat(2, 1) + 1;
+                while (norm(x0) > a[i]);
+                TAB1(100 * i + j, 0) = x0(0);
+                TAB1(100 * i + j, 1) = x0(1);
+                opt = pen(x0, c_ex, dc_ex, epsilon, Nmax, &matrix(a[i]));
+                TAB1(100 * i + j, 2) = opt.x(0);
+                TAB1(100 * i + j, 3) = opt.x(1);
+                TAB1(100 * i + j, 4) = norm(opt.x);
+                TAB1(100 * i + j, 5) = opt.y();
+                TAB1(100 * i + j, 6) = opt.f_calls;
+                solution::clear_calls();
+                opt = pen(x0, c_in, dc_in, epsilon, Nmax, &matrix(a[i]));
+                TAB1(100 * i + j, 7) = opt.x(0);
+                TAB1(100 * i + j, 8) = opt.x(1);
+                TAB1(100 * i + j, 9) = norm(opt.x);
+                TAB1(100 * i + j, 10) = opt.y();
+                TAB1(100 * i + j, 11) = opt.f_calls;
+                solution::clear_calls();
+            }
+            ofstream S("results_4_tab_1.csv");
+            S << TAB1;
+            S.close();
+        }
+#elif LAB_NO == 4 && LAB_PART == 2
+        matrix x0(2, 1);
+        double a, c = 10, dc = 2, epsilon = 1e-4;
+        int Nmax = 5000;
+        x0(0) = 20 * rand_mat(1, 1)() - 10;
+        x0(1) = 40 * rand_mat(1, 1)() - 20;
+        cout << x0 << endl << endl;
+        solution opt = pen(x0, c, dc, epsilon, Nmax);
+        opt.y = -opt.y;
+        cout << opt << endl;
+        solution::clear_calls();
+        matrix Y0(4, new double[4]{0, opt.x(0), 100, 0});
+        matrix *Y = solve_ode(0, 0.01, 7, Y0, &matrix(opt.x(1)));
+        matrix SYM = Y[0];
+        SYM = hcat(SYM, Y[1][0]);
+        SYM = hcat(SYM, Y[1][2]);
+        ofstream S("results_4_sym.csv");
+        S << SYM;
+        S.close();
+#elif LAB_NO == 5 && LAB_PART == 1
 
 #elif LAB_NO==5 && LAB_PART==2
 
