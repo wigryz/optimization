@@ -84,9 +84,42 @@ void solution::fit_fun(matrix *ud, matrix *ad) {
 
     y =  y * 0.1;
 #elif LAB_NO == 4 && LAB_PART == 1
-
+    double arg = 3.14 * sqrt(pow(x(0) / 3.14, 2) + pow(x(1) / 3.14, 2));
+    y = sin(arg) / arg;
+    if ((*ad)(1) > 1) //KARA ZEWNETRZNA
+    {
+        if (-x(0) + 1 > 0)
+            y = y + (*ad)(0) * pow(-x(0) + 1, 2);
+        if (-x(1) + 1 > 0)
+            y = y + (*ad)(0) * pow(-x(1) + 1, 2);
+        if (norm(x) - (*ud)(0) > 0)
+            y = y + (*ad)(0) * pow(norm(x) - (*ud)(0), 2);
+    }
+    else {
+        if (-x(0) + 1 > 0)
+            y = 1e10;
+        else
+            y = y - 1 / (*ad)(0) / (-x(0) + 1);
 #elif LAB_NO == 4 && LAB_PART == 2
-
+    matrix Y0(4, new double[4]{ 0,x(0), 100, 0 });
+	matrix omega(x(1));
+	matrix* Y = solve_ode(0, 0.01, 7, Y0, &omega);
+	int n = get_len(Y[0]);
+	int i0 = 0, i50 = 0;
+	for (int i = 1; i < n; ++i)
+	{
+		if (abs(Y[1](i, 2) - 50) < abs(Y[1](i50, 2) - 50))
+			i50 = i;
+		if (abs(Y[1](i, 2)) < abs(Y[1](i0, 2)))
+			i0 = i;
+	}
+	y = -Y[1](i0, 0);
+	if (abs(x(0)) - 10 > 0)
+		y = y + (*ad)(0) * pow(abs(x(0)) - 10, 2);
+	if(abs(x(1) - 20 > 0))
+		y = y + (*ad)(0)*pow(abs(x(1))-20,2);
+	if (abs(Y[1](i50, 0) - 5) - 1 > 0)
+		y = y + (*ad)(0) * pow(abs(Y[1](i50, 0) - 5) - 1, 2);
 #elif LAB_NO == 5 && (LAB_PART == 1 || LAB_PART == 2)
 
 #elif LAB_NO == 5 && LAB_PART == 3

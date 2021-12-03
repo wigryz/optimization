@@ -61,7 +61,17 @@ matrix diff(double t, const matrix &Y, matrix *ud, matrix *ad) {
     dY(1) = (m - b*Y(1)) / I;
     return dY;
 #elif LAB_NO==4 && LAB_PART==2
-
+    double c = 0.47, r = 0.12, m = 0.6, ro = 1.2, g = 9.81;
+    double s = 3.14 * r * r, Dx = 0.5 * c * ro * s * abs(Y(1)) * Y(1);
+    double Dy = 0.5 * c * ro * s * abs(Y(3)) * Y(3);
+    double FMx = 3.14 * ro * Y(3) * (*ud)(0) * pow(r, 3);
+    double FMy = 3.14 * ro * Y(1) * (*ud)(0) * pow(r, 3);
+    matrix dY(4, 1);
+    dY(0) = Y(1);
+    dY(1) = (-Dx - FMx) / m;
+    dY(2) = Y(3);
+    dY(3) = (-m * g - Dy - FMy) / m;
+    return dY;
 #elif LAB_NO==7 && LAB_PART==2
 
 #else
