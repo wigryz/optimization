@@ -100,6 +100,7 @@ void solution::fit_fun(matrix *ud, matrix *ad) {
             y = 1e10;
         else
             y = y - 1 / (*ad)(0) / (-x(0) + 1);
+    }
 #elif LAB_NO == 4 && LAB_PART == 2
     matrix Y0(4, new double[4]{ 0,x(0), 100, 0 });
 	matrix omega(x(1));

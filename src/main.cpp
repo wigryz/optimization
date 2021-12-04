@@ -148,12 +148,12 @@ int main() {
 
         matrix* Y_F = solve_ode(0, 1, 1000, Y0, nullptr, &opt_f.x);
         matrix* Y_L = solve_ode(0, 1, 1000, Y0, nullptr, &opt_l.x);
-        matrix SYM(get_len(Y_F[0]),7);
-        SYM(0, 0) = matrix Y_F; //I tu jakos te wartosci trzeba wpisac do tego Mecierza/Tablicy SYM (7 wartosci)
+        matrix symulacja(get_len(Y_F[0]),7);
+        symulacja(0, 0) = matrix Y_F; //I tu jakos te wartosci trzeba wpisac do tego Mecierza/Tablicy symulacja (7 wartosci)
 
 
         ofstream sout("wyniki1.csv");
-        sout << SYM;
+        sout << symulacja;
 
 #elif LAB_NO == 3 && LAB_PART == 1
         srand(time(NULL));
@@ -216,15 +216,15 @@ int main() {
         matrix* Y1 = solve_ode(0, 0.1, 100, Y0, &ud, &optHJ.x);
         matrix ud2;
         matrix* Y2 = solve_ode(0, 0.1, 100, Y0, &ud2, &optR.x);
-        ofstream S("simHJ.csv");
-        S << hcat(Y1[0], Y1[1]);
-        S.close();
-        S.open("simR.csv");
-        S << hcat(Y2[0], Y2[1]);
-        S.close();
+        ofstream out("simHJ.csv");
+        out << hcat(Y1[0], Y1[1]);
+        out.close();
+        out.open("simR.csv");
+        out << hcat(Y2[0], Y2[1]);
+        out.close();
 
 #elif LAB_NO == 4 && LAB_PART == 1
-        matrix x0, TAB1(300, 12);
+        matrix x0, wyniki(300, 12);
         double a[3] = { 4, 4.4934, 5 }, c_ex = 1, c_in = 10, dc_ex = 2, dc_in = 0.5, epsilon = 1e-10;
         int Nmax = 10000;
         solution opt;
@@ -234,26 +234,27 @@ int main() {
                 do
                     x0 = 5 * rand_mat(2, 1) + 1;
                 while (norm(x0) > a[i]);
-                TAB1(100 * i + j, 0) = x0(0);
-                TAB1(100 * i + j, 1) = x0(1);
-                opt = pen(x0, c_ex, dc_ex, epsilon, Nmax, &matrix(a[i]));
-                TAB1(100 * i + j, 2) = opt.x(0);
-                TAB1(100 * i + j, 3) = opt.x(1);
-                TAB1(100 * i + j, 4) = norm(opt.x);
-                TAB1(100 * i + j, 5) = opt.y();
-                TAB1(100 * i + j, 6) = opt.f_calls;
+                wyniki(100 * i + j, 0) = x0(0);
+                wyniki(100 * i + j, 1) = x0(1);
+                matrix a1 = matrix(a[i]);
+                opt = pen(x0, c_ex, dc_ex, epsilon, Nmax, &a1);
+                wyniki(100 * i + j, 2) = opt.x(0);
+                wyniki(100 * i + j, 3) = opt.x(1);
+                wyniki(100 * i + j, 4) = norm(opt.x);
+                wyniki(100 * i + j, 5) = opt.y();
+                wyniki(100 * i + j, 6) = opt.f_calls;
                 solution::clear_calls();
-                opt = pen(x0, c_in, dc_in, epsilon, Nmax, &matrix(a[i]));
-                TAB1(100 * i + j, 7) = opt.x(0);
-                TAB1(100 * i + j, 8) = opt.x(1);
-                TAB1(100 * i + j, 9) = norm(opt.x);
-                TAB1(100 * i + j, 10) = opt.y();
-                TAB1(100 * i + j, 11) = opt.f_calls;
+                opt = pen(x0, c_in, dc_in, epsilon, Nmax, &a1);
+                wyniki(100 * i + j, 7) = opt.x(0);
+                wyniki(100 * i + j, 8) = opt.x(1);
+                wyniki(100 * i + j, 9) = norm(opt.x);
+                wyniki(100 * i + j, 10) = opt.y();
+                wyniki(100 * i + j, 11) = opt.f_calls;
                 solution::clear_calls();
             }
-            ofstream S("results_4_tab_1.csv");
-            S << TAB1;
-            S.close();
+            ofstream out("wyniki_tab_1.csv");
+            out << wyniki;
+            out.close();
         }
 #elif LAB_NO == 4 && LAB_PART == 2
         matrix x0(2, 1);
@@ -267,13 +268,14 @@ int main() {
         cout << opt << endl;
         solution::clear_calls();
         matrix Y0(4, new double[4]{0, opt.x(0), 100, 0});
-        matrix *Y = solve_ode(0, 0.01, 7, Y0, &matrix(opt.x(1)));
-        matrix SYM = Y[0];
-        SYM = hcat(SYM, Y[1][0]);
-        SYM = hcat(SYM, Y[1][2]);
-        ofstream S("results_4_sym.csv");
-        S << SYM;
-        S.close();
+        matrix xd = matrix(opt.x(1));
+        matrix *Y = solve_ode(0, 0.01, 7, Y0, &xd);
+        matrix symulacja = Y[0];
+        symulacja = hcat(symulacja, Y[1][0]);
+        symulacja = hcat(symulacja, Y[1][2]);
+        ofstream out("wyniki_sym.csv");
+        out << symulacja;
+        out.close();
 #elif LAB_NO == 5 && LAB_PART == 1
 
 #elif LAB_NO==5 && LAB_PART==2
