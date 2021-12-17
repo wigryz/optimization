@@ -277,34 +277,99 @@ int main() {
         out << symulacja;
         out.close();
 #elif LAB_NO == 5 && LAB_PART == 1
-        matrix x0 = 20 * rand_mat(2, 1) - 10;
+        
+        ofstream sout("wynikiPart1.csv");
+        matrix x0, wyniki(100, 18);
+
+        for (int j = 0; j < 100; j++) {
+         
+            matrix x0 = 20 * rand_mat(2, 1) - 10;
+            
+            wyniki(j, 0) = x0(0);   //punkty
+            wyniki(j, 1) = x0(1); 
+
+            double h0 = 0.12, epsilon = 1e-5;
+            int Nmax = 10000;
+
+            solution optSD, optCG, optN;
+            optSD = SD(x0, h0, epsilon, Nmax);
+            wyniki(j,2) = optSD.x(0);
+            wyniki(j, 3) = optSD.x(1);
+            wyniki(j, 4) = optSD.y();
+            wyniki(j, 5) = optSD.f_calls;
+            wyniki(j, 6) = optSD.g_calls;
+
+
+            //cout << optSD << endl << endl;
+            solution::clear_calls();
+            optCG = CG(x0, h0, epsilon, Nmax);
+            wyniki(j, 7) = optCG.x(0);
+            wyniki(j, 8) = optCG.x(1);
+            wyniki(j, 9) = optCG.y();
+            wyniki(j, 10) = optCG.f_calls;
+            wyniki(j, 11) = optCG.g_calls;
+
+            //cout << optCG << endl << endl;
+            solution::clear_calls();
+            optN = Newton(x0, h0, epsilon, Nmax);
+            wyniki(j, 12) = optN.x(0);
+            wyniki(j, 13) = optN.x(1);
+            wyniki(j, 14) = optN.y();
+            wyniki(j, 15) = optN.f_calls;
+            wyniki(j, 16) = optN.g_calls;
+            wyniki(j, 17) = optN.H_calls;
+            //cout << optN << endl << endl;
+            solution::clear_calls();
+
+
+        }
+        sout << wyniki;
+        sout.close();
+
+
+     
+
+#elif LAB_NO == 5 && LAB_PART == 2
+    ofstream sout("wynikiPart2.csv");
+    matrix wyniki(100, 18);
+    matrix x0 = 20 * rand_mat(2, 1) - 10;
+    for (int j = 0; j < 100; j++) {
+
         double h0 = 0.05, epsilon = 1e-5;
         int Nmax = 10000;
         solution optSD, optCG, optN;
-        optSD = SD(x0, h0, epsilon, Nmax);
-        cout << optSD << endl << endl;
-        solution::clear_calls();
-        optCG = CG(x0, h0, epsilon, Nmax);
-        cout << optCG << endl << endl;
-        solution::clear_calls();
-        optN = Newton(x0, h0, epsilon, Nmax);
-        cout << optN << endl << endl;
+        optSD = SD(x0, h0, epsilon, Nmax); // Stw�rz matrix ud pusty
+        wyniki(j, 2) = optSD.x(0);
+        wyniki(j, 3) = optSD.x(1);
+        wyniki(j, 4) = optSD.y();
+        wyniki(j, 5) = optSD.f_calls;
+        wyniki(j, 6) = optSD.g_calls;
+        //cout << optSD << endl << endl;
         solution::clear_calls();
 
-#elif LAB_NO == 5 && LAB_PART == 2
-        matrix x0 = 20 * rand_mat(2, 1) - 10;
-    double h0 = 0.05, epsilon = 1e-5;
-    int Nmax = 10000;
-    solution optSD, optCG, optN;
-    optSD = SD(x0, h0, epsilon, Nmax); // Stw�rz matrix ud pusty
-    cout << optSD << endl << endl;
-    solution::clear_calls();
-    optCG = CG(x0, h0, epsilon, Nmax);
-    cout << optCG << endl << endl;
-    solution::clear_calls();
-    optN = Newton(x0, h0, epsilon, Nmax);
-    cout << optN << endl << endl;
-    solution::clear_calls();
+        optCG = CG(x0, h0, epsilon, Nmax);
+        wyniki(j, 7) = optCG.x(0);
+        wyniki(j, 8) = optCG.x(1);
+        wyniki(j, 9) = optCG.y();
+        wyniki(j, 10) = optCG.f_calls;
+        wyniki(j, 11) = optCG.g_calls;
+        //cout << optCG << endl << endl;
+        solution::clear_calls();
+
+        optN = Newton(x0, h0, epsilon, Nmax);
+        wyniki(j, 12) = optN.x(0);
+        wyniki(j, 13) = optN.x(1);
+        wyniki(j, 14) = optN.y();
+        wyniki(j, 15) = optN.f_calls;
+        wyniki(j, 16) = optN.g_calls;
+        wyniki(j, 17) = optN.H_calls;
+        //cout << optN << endl << endl;
+        solution::clear_calls();
+    }
+
+    sout << wyniki;
+    sout.close();
+
 #elif LAB_NO==5 && LAB_PART==3
         matrix x0(3, new double[3]{ -1, 0.1, 0.1 });
         solution test(x0);
