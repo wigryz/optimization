@@ -34,7 +34,7 @@ double *expansion(double x0, double d, double alpha, int Nmax, matrix *ud, matri
     while (true) {
         X2.x = x0 + pow(alpha, i) * d;
         X2.fit_fun(ud, ad);
-        if (X1.y <= X2.y  || solution::f_calls > Nmax) // i > Nmax
+        if (X1.y <= X2.y || solution::f_calls > Nmax) // i > Nmax
             break;
         X0 = X1;
         X1 = X2;
@@ -57,7 +57,7 @@ solution fib(double a, double b, double epsilon, matrix *ud, matrix *ad) {
         F[i] = F[i - 2] + F[i - 1];
     }
     solution A(a), B(b), C, D;
-    C.x = B.x - (double)F[n - 2] / F[n - 1] * (B.x - A.x);
+    C.x = B.x - (double) F[n - 2] / F[n - 1] * (B.x - A.x);
     D.x = A.x + B.x - C.x;
     C.fit_fun(ud, ad);
     D.fit_fun(ud, ad);
@@ -67,7 +67,7 @@ solution fib(double a, double b, double epsilon, matrix *ud, matrix *ad) {
         } else {
             A = C;
         }
-        C.x = B.x - (double)F[n - i - 2] / F[n - i - 1] * (B.x - A.x);
+        C.x = B.x - (double) F[n - i - 2] / F[n - i - 1] * (B.x - A.x);
         D.x = A.x + B.x - C.x;
         C.fit_fun(ud, ad);
         D.fit_fun(ud, ad);
@@ -124,20 +124,17 @@ solution lag(double a, double b, double epsilon, double gamma, int Nmax, matrix 
 
 #endif
 #if LAB_NO > 2
-solution HJ(matrix x0, double s, double alpha, double epsilon, int Nmax, matrix *ud, matrix *ad)
-{
+
+solution HJ(matrix x0, double s, double alpha, double epsilon, int Nmax, matrix *ud, matrix *ad) {
     solution XB(x0), XB_old, X;
     XB.fit_fun(ud, ad);
-    while (true)
-    {
+    while (true) {
         X = HJ_trial(XB, s, ud, ad);
-        if (X.y < XB.y)
-        {
-            while (true)
-            {
+        if (X.y < XB.y) {
+            while (true) {
                 XB_old = XB;
                 XB = X;
-#if LAB_NO==3 && LAB_PART==2
+#if LAB_NO == 3 && LAB_PART == 2
                 (*ud).add_row(trans(XB.x));
 #endif
                 X.x = 2 * XB.x - XB_old.x;
@@ -145,30 +142,26 @@ solution HJ(matrix x0, double s, double alpha, double epsilon, int Nmax, matrix 
                 X = HJ_trial(X, s, ud, ad);
                 if (X.y >= XB.y)
                     break;
-                if (solution::f_calls>Nmax)
+                if (solution::f_calls > Nmax)
                     return XB;
             }
-        }
-        else
+        } else
             s *= alpha;
         if (s < epsilon || solution::f_calls > Nmax)
             return XB;
     }
 }
 
-solution HJ_trial(solution XB, double s, matrix *ud, matrix *ad)
-{
-    int n=get_dim(XB);
+solution HJ_trial(solution XB, double s, matrix *ud, matrix *ad) {
+    int n = get_dim(XB);
     matrix D = ident_mat(n);
     solution X;
-    for (int i = 0; i < n; ++i)
-    {
+    for (int i = 0; i < n; ++i) {
         X.x = XB.x + s * D[i];
         X.fit_fun(ud, ad);
         if (X.y < XB.y)
             XB = X;
-        else
-        {
+        else {
             X.x = XB.x - s * D[i];
             X.fit_fun(ud, ad);
             if (X.y < XB.y)
@@ -178,54 +171,45 @@ solution HJ_trial(solution XB, double s, matrix *ud, matrix *ad)
     return XB;
 }
 
-solution Rosen(matrix x0, matrix s0, double alpha, double beta, double epsilon, int Nmax, matrix *ud, matrix *ad)
-{
+solution Rosen(matrix x0, matrix s0, double alpha, double beta, double epsilon, int Nmax, matrix *ud, matrix *ad) {
     solution X(x0), Xt;
     int n = get_dim(X);
     matrix l(n, 1), p(n, 1), s(s0), D = ident_mat(n);
     X.fit_fun(ud, ad);
-    while (true)
-    {
-        for (int i = 0; i < n; ++i)
-        {
-            Xt.x = X.x + s(i)*D[i];
+    while (true) {
+        for (int i = 0; i < n; ++i) {
+            Xt.x = X.x + s(i) * D[i];
             Xt.fit_fun(ud, ad);
-            if (Xt.y < X.y)
-            {
+            if (Xt.y < X.y) {
                 X = Xt;
                 l(i) += s(i);
                 s(i) *= alpha;
-            }
-            else
-            {
+            } else {
                 s(i) *= -beta;
                 ++p(i);
             }
         }
-#if LAB_NO==3 && LAB_PART==2
+#if LAB_NO == 3 && LAB_PART == 2
         (*ud).add_row(trans(X.x));
 #endif
         bool change = true;
         for (int i = 0; i < n; ++i)
-            if (p(i)==0 || l(i)==0)
-            {
+            if (p(i) == 0 || l(i) == 0) {
                 change = false;
                 break;
             }
-        if (change)
-        {
+        if (change) {
             matrix Q(n, n), v(n, 1);
-            for (int i = 0; i<n; ++i)
-                for (int j = 0; j<=i; ++j)
+            for (int i = 0; i < n; ++i)
+                for (int j = 0; j <= i; ++j)
                     Q(i, j) = l(i);
-            Q = D*Q;
+            Q = D * Q;
             v = Q[0] / norm(Q[0]);
             D.set_col(v, 0);
-            for (int i = 1; i<n; ++i)
-            {
+            for (int i = 1; i < n; ++i) {
                 matrix temp(n, 1);
                 for (int j = 0; j < i; ++j)
-                    temp = temp + trans(Q[i])*D[j]*D[j];
+                    temp = temp + trans(Q[i]) * D[j] * D[j];
                 v = (Q[i] - temp) / norm(Q[i] - temp);
                 D.set_col(v, i);
             }
@@ -241,15 +225,15 @@ solution Rosen(matrix x0, matrix s0, double alpha, double beta, double epsilon, 
             return X;
     }
 }
+
 #endif
 #if LAB_NO > 3
-solution pen(matrix x0, double c0, double dc, double epsilon, int Nmax, matrix *ud, matrix *ad)
-{
+
+solution pen(matrix x0, double c0, double dc, double epsilon, int Nmax, matrix *ud, matrix *ad) {
     double alpha = 1, beta = 0.5, gamma = 2, delta = 0.5, s = 0.5;
     solution X(x0), X1;
-    matrix c(2, new double[2]{ c0,dc });
-    while (true)
-    {
+    matrix c(2, new double[2]{c0, dc});
+    while (true) {
         X1 = sym_NM(X.x, s, alpha, beta, gamma, delta, epsilon, Nmax, ud, &c);
         if (norm(X1.x - X.x) < epsilon || solution::f_calls > Nmax)
             return X1;
@@ -258,27 +242,25 @@ solution pen(matrix x0, double c0, double dc, double epsilon, int Nmax, matrix *
     }
 }
 
-solution sym_NM(matrix x0, double s, double alpha, double beta, double gamma, double delta, double epsilon, int Nmax, matrix *ud, matrix *ad)
-{
+solution
+sym_NM(matrix x0, double s, double alpha, double beta, double gamma, double delta, double epsilon, int Nmax, matrix *ud,
+       matrix *ad) {
     int n = get_len(x0);
     matrix D = ident_mat(n);
     int N = n + 1;
-    solution* S = new solution[N];
+    solution *S = new solution[N];
     S[0].x = x0;
     S[0].fit_fun(ud, ad);
-    for (int i = 1; i < N; ++i)
-    {
+    for (int i = 1; i < N; ++i) {
         S[i].x = S[0].x + s * D[i - 1];
         S[i].fit_fun(ud, ad);
     }
     solution PR, PE, PN;
     matrix pc;
     int i_min, i_max;
-    while (true)
-    {
+    while (true) {
         i_min = i_max = 0;
-        for (int i = 1; i < N; ++i)
-        {
+        for (int i = 1; i < N; ++i) {
             if (S[i_min].y > S[i].y)
                 i_min = i;
             if (S[i_max].y < S[i].y)
@@ -293,26 +275,21 @@ solution sym_NM(matrix x0, double s, double alpha, double beta, double gamma, do
         PR.fit_fun(ud, ad);
         if (PR.y < S[i_max].y && S[i_min].y <= PR.y)
             S[i_max] = PR;
-        else if (PR.y < S[i_min].y)
-        {
+        else if (PR.y < S[i_min].y) {
             PE.x = pc + gamma * (PR.x - pc);
             PE.fit_fun(ud, ad);
             if (PE.y < S[i_max].y)
                 S[i_max] = PE;
             else
                 S[i_max] = PR;
-        }
-        else
-        {
+        } else {
             PN.x = pc + beta * (S[i_max].x - pc);
             PN.fit_fun(ud, ad);
             if (PN.y < S[i_max].y)
                 S[i_max] = PN;
-            else
-            {
+            else {
                 for (int i = 0; i < N; ++i)
-                    if (i_min != i)
-                    {
+                    if (i_min != i) {
                         S[i].x = delta * (S[i].x + S[i_min].x);
                         S[i].fit_fun(ud, ad);
                     }
@@ -322,12 +299,14 @@ solution sym_NM(matrix x0, double s, double alpha, double beta, double gamma, do
         for (int i = 1; i < N; ++i)
             if (norm(S[i].x - S[i_min].x) > max_s)
                 max_s = norm(S[i].x - S[i_min].x);
-        if (max_s < epsilon || solution::f_calls>Nmax)
+        if (max_s < epsilon || solution::f_calls > Nmax)
             return S[i_min];
     }
 }
+
 #endif
 #if LAB_NO > 4
+
 solution SD(matrix x0, double h0, double epsilon, int Nmax, matrix *ud, matrix *ad)
 {
     int n = get_len(x0);
@@ -336,34 +315,30 @@ solution SD(matrix x0, double h0, double epsilon, int Nmax, matrix *ud, matrix *
     matrix d(n, 1), *P = new matrix[2];
     solution h;
     double *ab;
-    while (true)
-    {
+    while (true) {
         X.grad();
-        d = ???
-        if (h0<0)
+        d = -X.g;
+        if (h0 < 0)
         {
-            P[0] = ???
-            P[1] = ???
-            ab = ???
-            h = ???
-            X1.x = ???
-        }
-        else
-            X1.x = ???
-#if LAB_NO==5 && LAB_PART==2
-        ???
+            P[0] = X.x;
+            P[1] = d;
+            ab = expansion(0, 1, 1.2, Nmax, ud, P);
+            h = golden(ab[0], ab[1], epsilon, Nmax, ud, P);
+            X1.x = X.x + h.x * d;
+        } else
+            X1.x = X.x + h0 * d;
+#if LAB_NO == 5 && LAB_PART == 2
+        (*ud).add_row(trans(X1.x));
 #endif
-        if (???)
-        {
+        if (norm(X1.x - X.x) < epsilon || solution::f_calls > Nmax || solution::g_calls > Nmax) {
             X1.fit_fun(ud, ad);
             return X1;
         }
-        ???
+        X = X1;
     }
 }
 
-solution CG(matrix x0, double h0, double epsilon, int Nmax, matrix *ud, matrix *ad)
-{
+solution CG(matrix x0, double h0, double epsilon, int Nmax, matrix *ud, matrix *ad) {
     int n = get_len(x0);
     solution X, X1;
     X.x = x0;
@@ -371,98 +346,84 @@ solution CG(matrix x0, double h0, double epsilon, int Nmax, matrix *ud, matrix *
     solution h;
     double *ab, beta;
     X.grad();
-    d = ???
-    while (true)
-    {
-        if (h0<0)
-        {
-            P[0] = ???
-            P[1] = ???
-            ab = ???
-            h = ???
-            X1.x = ???
-        }
-        else
-            X1.x = ???
-#if LAB_NO==5 && LAB_PART==2
-        ???
+    d = -X.g;
+    while (true) {
+        if (h0 < 0) {
+            P[0] = X.x;
+            P[1] = d;
+            ab = expansion(0, 1, 1.2, Nmax, ud, P);
+            h = golden(ab[0], ab[1], epsilon, Nmax, ud, P);
+            X1.x = X.x + h.x * d;
+        } else
+            X1.x = X.x + h0 * d;
+#if LAB_NO == 5 && LAB_PART == 2
+        (*ud).add_row(trans(X1.x));
 #endif
-        if (???)
-        {
-            X1.fit_fun(ud);
+        if (norm(X1.x - X.x) < epsilon || solution::f_calls > Nmax || solution::g_calls > Nmax) {
+            X1.fit_fun(ud, ad);
             return X1;
         }
         X1.grad();
-        beta = ???
-        d = ???
-        ???
+        beta = pow(norm(X1.g), 2) / pow(norm(X.g), 2);
+        d = -X1.g + beta * d;
+        X = X1;
     }
 }
 
-solution Newton(matrix x0, double h0, double epsilon, int Nmax, matrix *ud, matrix *ad)
-{
+solution Newton(matrix x0, double h0, double epsilon, int Nmax, matrix *ud, matrix *ad) {
     int n = get_len(x0);
     solution X, X1;
     X.x = x0;
     matrix d(n, 1), *P = new matrix[2];
     solution h;
     double *ab;
-    while (true)
-    {
+    while (true) {
         X.grad();
         X.hess();
-        d = ???
-        if (h0<0)
+        d = -inv(X.H) * X.g;
+        if (h0 < 0)
         {
-            P[0] = ???
-            P[1] = ???
-            ab = ???
-            h = ???
-            X1.x = ???
-        }
-        else
-            X1.x = ???
-#if LAB_NO==5 && LAB_PART==2
-        ???
+            P[0] = X.x;
+            P[1] = d;
+            ab = expansion(0, 1, 1.2, Nmax, ud, P);
+            h = golden(ab[0], ab[1], epsilon, Nmax, ud, P);
+            X1.x = X.x + h.x * d;
+        } else
+            X1.x = X.x + h0 * d;
+#if LAB_NO == 5 && LAB_PART == 2
+        (*ud).add_row(trans(X1.x));
 #endif
-        if (???)
-        {
-            X1.fit_fun(ud);
+        if (norm(X1.x - X.x) < epsilon || solution::f_calls > Nmax || solution::g_calls > Nmax) {
+            X1.fit_fun(ud, ad);
             return X1;
         }
-        ???
+        X = X1;
     }
 }
 
-solution golden(double a, double b, double epsilon, int Nmax, matrix *ud, matrix *ad)
-{
-    double alfa = ???
+solution golden(double a, double b, double epsilon, int Nmax, matrix *ud, matrix *ad) {
+    double alfa = (sqrt(5) - 1) / 2;
     solution A, B, C, D;
     A.x = a;
     B.x = b;
-    C.x = ???
+    C.x = B.x - alfa * (B.x - A.x);
     C.fit_fun(ud, ad);
-    D.x = ???
+    D.x = A.x + alfa * (B.x - A.x);
     D.fit_fun(ud, ad);
-    while (true)
-    {
-        if (???)
-        {
-            ???
-            ???
-            ???
+    while (true) {
+        if (C.y < D.y) {
+            B = D;
+            D = C;
+            C.x = B.x - alfa * (B.x - A.x);
             C.fit_fun(ud, ad);
-        }
-        else
-        {
-            ???
-            ???
-            ???
+        } else {
+            A = C;
+            C = D;
+            D.x = A.x + alfa * (B.x - A.x);
             D.fit_fun(ud, ad);
         }
-        if (???)
-        {
-            A.x = ???
+        if ((B.x - A.x) < epsilon || solution::f_calls > Nmax) {
+            A.x = (A.x + B.x) / 2;
             A.fit_fun(ud, ad);
             return A;
         }

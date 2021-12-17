@@ -277,10 +277,41 @@ int main() {
         out << symulacja;
         out.close();
 #elif LAB_NO == 5 && LAB_PART == 1
+        matrix x0 = 20 * rand_mat(2, 1) - 10;
+        double h0 = 0.05, epsilon = 1e-5;
+        int Nmax = 10000;
+        solution optSD, optCG, optN;
+        optSD = SD(x0, h0, epsilon, Nmax);
+        cout << optSD << endl << endl;
+        solution::clear_calls();
+        optCG = CG(x0, h0, epsilon, Nmax);
+        cout << optCG << endl << endl;
+        solution::clear_calls();
+        optN = Newton(x0, h0, epsilon, Nmax);
+        cout << optN << endl << endl;
+        solution::clear_calls();
 
-#elif LAB_NO==5 && LAB_PART==2
-
+#elif LAB_NO == 5 && LAB_PART == 2
+        matrix x0 = 20 * rand_mat(2, 1) - 10;
+    double h0 = 0.05, epsilon = 1e-5;
+    int Nmax = 10000;
+    solution optSD, optCG, optN;
+    optSD = SD(x0, h0, epsilon, Nmax); // Stw�rz matrix ud pusty
+    cout << optSD << endl << endl;
+    solution::clear_calls();
+    optCG = CG(x0, h0, epsilon, Nmax);
+    cout << optCG << endl << endl;
+    solution::clear_calls();
+    optN = Newton(x0, h0, epsilon, Nmax);
+    cout << optN << endl << endl;
+    solution::clear_calls();
 #elif LAB_NO==5 && LAB_PART==3
+        matrix x0(3, new double[3]{ -1, 0.1, 0.1 });
+        solution test(x0);
+        test.fit_fun();
+        test.grad();
+        cout << test<<endl;
+        cout << test.g << endl;
 
 #elif LAB_NO==6 && LAB_PART==1
 
