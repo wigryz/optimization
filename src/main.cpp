@@ -277,7 +277,7 @@ int main() {
         out << symulacja;
         out.close();
 #elif LAB_NO == 5 && LAB_PART == 1
-        
+
         ofstream sout("wynikiPart1.csv");
         matrix x0, wyniki(100, 18);
 
@@ -327,50 +327,50 @@ int main() {
         sout.close();
 
 
-     
+
 
 #elif LAB_NO == 5 && LAB_PART == 2
-    ofstream sout("wynikiPart2.csv");
-    matrix wyniki(100, 18);
-    matrix x0 = 20 * rand_mat(2, 1) - 10;
-    for (int j = 0; j < 100; j++) {
+        ofstream sout("wynikiPart2.csv");
+        matrix wyniki(100, 18);
+        matrix x0 = 20 * rand_mat(2, 1) - 10;
+        for (int j = 0; j < 100; j++) {
 
-        double h0 = 0.05, epsilon = 1e-5;
-        int Nmax = 10000;
-        solution optSD, optCG, optN;
-        optSD = SD(x0, h0, epsilon, Nmax); // Stw�rz matrix ud pusty
-        wyniki(j, 2) = optSD.x(0);
-        wyniki(j, 3) = optSD.x(1);
-        wyniki(j, 4) = optSD.y();
-        wyniki(j, 5) = optSD.f_calls;
-        wyniki(j, 6) = optSD.g_calls;
-        //cout << optSD << endl << endl;
-        solution::clear_calls();
+            double h0 = 0.05, epsilon = 1e-5;
+            int Nmax = 10000;
+            solution optSD, optCG, optN;
+            optSD = SD(x0, h0, epsilon, Nmax); // Stw�rz matrix ud pusty
+            wyniki(j, 2) = optSD.x(0);
+            wyniki(j, 3) = optSD.x(1);
+            wyniki(j, 4) = optSD.y();
+            wyniki(j, 5) = optSD.f_calls;
+            wyniki(j, 6) = optSD.g_calls;
+            //cout << optSD << endl << endl;
+            solution::clear_calls();
 
-        optCG = CG(x0, h0, epsilon, Nmax);
-        wyniki(j, 7) = optCG.x(0);
-        wyniki(j, 8) = optCG.x(1);
-        wyniki(j, 9) = optCG.y();
-        wyniki(j, 10) = optCG.f_calls;
-        wyniki(j, 11) = optCG.g_calls;
-        //cout << optCG << endl << endl;
-        solution::clear_calls();
+            optCG = CG(x0, h0, epsilon, Nmax);
+            wyniki(j, 7) = optCG.x(0);
+            wyniki(j, 8) = optCG.x(1);
+            wyniki(j, 9) = optCG.y();
+            wyniki(j, 10) = optCG.f_calls;
+            wyniki(j, 11) = optCG.g_calls;
+            //cout << optCG << endl << endl;
+            solution::clear_calls();
 
-        optN = Newton(x0, h0, epsilon, Nmax);
-        wyniki(j, 12) = optN.x(0);
-        wyniki(j, 13) = optN.x(1);
-        wyniki(j, 14) = optN.y();
-        wyniki(j, 15) = optN.f_calls;
-        wyniki(j, 16) = optN.g_calls;
-        wyniki(j, 17) = optN.H_calls;
-        //cout << optN << endl << endl;
-        solution::clear_calls();
-    }
+            optN = Newton(x0, h0, epsilon, Nmax);
+            wyniki(j, 12) = optN.x(0);
+            wyniki(j, 13) = optN.x(1);
+            wyniki(j, 14) = optN.y();
+            wyniki(j, 15) = optN.f_calls;
+            wyniki(j, 16) = optN.g_calls;
+            wyniki(j, 17) = optN.H_calls;
+            //cout << optN << endl << endl;
+            solution::clear_calls();
+        }
 
-    sout << wyniki;
-    sout.close();
+        sout << wyniki;
+        sout.close();
 
-#elif LAB_NO==5 && LAB_PART==3
+#elif LAB_NO == 5 && LAB_PART == 3
         matrix x0(3, new double[3]{ -1, 0.1, 0.1 });
         solution test(x0);
         test.fit_fun();
@@ -378,14 +378,56 @@ int main() {
         cout << test<<endl;
         cout << test.g << endl;
 
-#elif LAB_NO==6 && LAB_PART==1
+#elif LAB_NO == 6 && LAB_PART == 1
 
-#elif LAB_NO==6 && LAB_PART==2
+#elif LAB_NO == 6 && LAB_PART == 2
 
-#elif LAB_NO==7 && LAB_PART==1
-
-#elif LAB_NO==7 && LAB_PART==2
-
+        // N - liczbaw wymiar�w,
+        // limits - zakres rozwiazan poczatkowych,
+        // mi - wielkosc populacji poczatkowej,
+        // lambda - wielkosc pop potomnej,
+        // sigma0 - odchylenie standardowe zmiany X
+#elif LAB_NO == 7 && LAB_PART == 1
+        int N = 2, Nmax = 5000, mi = 20, lambda = 40;
+        double sigmaValue = 0.01;
+        ofstream sout("tabela1_k6.csv");
+        for (int i = 0; i < 5; i++) {
+            sout << "sigma = " << sigmaValue << "\n";
+            for (int j = 0; j < 100; j++) {
+                double epsilon = 1e-3;
+                matrix limits(2, 2), sigma0(2, 1);
+                limits(0, 0) = limits(1, 0) = -5;
+                limits(0, 1) = limits(1, 1) = 5;
+                sigma0(0) = sigma0(1) = sigmaValue;
+                solution optEA = EA(N, limits, mi, lambda, sigma0, epsilon, Nmax);
+                sout << optEA.x(0) << "\t" << optEA.x(1) << "\t" << optEA.y(0) << "\t" << solution::f_calls << "\n";
+                solution::clear_calls();
+            }
+            sigmaValue *= 10.0;
+        }
+        sout.close();
+#elif LAB_NO == 7 && LAB_PART == 2
+        //parametry poczatkowe
+        int N = 2, Nmax = 5000, mi = 20, lambda = 40;
+        double epsilon = 1e-3;
+        matrix limits(2, 2), sigma0(2, 1);
+        limits(0, 0) = limits(1, 0) = 0.1;
+        limits(0, 1) = limits(1, 1) = 3;
+        sigma0(0) = sigma0(1) = 10;
+        //optymalizacja
+        solution optEA = EA(N, limits, mi, lambda, sigma0, epsilon, Nmax);
+        ofstream sout("symulacja.csv");
+        sout << optEA.x(0, 0) << ";" << optEA.x(1, 0) << ";" << optEA.y(0) << ";" << solution::f_calls << endl;
+        solution::clear_calls();
+        matrix Y0(4, new double[4]{0, 0, 0, 0 });
+        matrix ud(2, 1);
+        ud(0) = optEA.x(0, 0);
+        ud(1) = optEA.x(1, 0);
+        //symulacja
+        matrix* R = solve_ode(0, 0.1, 100, Y0, &ud);
+        matrix result = hcat(R[1][0], R[1][2]);
+        sout << result << endl;
+        sout.close();
 #endif
     }
     catch (char *EX_INFO) {

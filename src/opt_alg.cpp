@@ -431,122 +431,93 @@ solution golden(double a, double b, double epsilon, int Nmax, matrix *ud, matrix
 }
 
 #endif
-#if LAB_NO > 5
-solution Powell(matrix x0, double epsilon, int Nmax, matrix *ud, matrix *ad)
-{
-    int n = get_len(x0);
-    matrix D = ident_mat(n), *A = new matrix[2];
-    solution X, P, h;
-    X.x = x0;
-    double *ab;
-    while (true)
-    {
-        P = ???
-        for (int i = 0; ???; ++i)
-        {
-            A[0] = ???
-            A[1] = ???
-            ab = ???
-            h = ???
-            P.x = ???
-        }
-        if (???)
-        {
-            P.fit_fun(ud);
-            return P;
-        }
-        for (int i = 0; i < n - 1; ++i)
-            D.set_col(???);
-        D.set_col(???);
-        A[0] = ???
-        A[1] = ???
-        ab = ???
-        h = ???
-        X.x = ???
-    }
-}
-#endif
 #if LAB_NO > 6
 solution EA(int N, matrix limits, int mi, int lambda, matrix sigma0, double epsilon, int Nmax, matrix *ud, matrix *ad)
-{
+{	//N - liczbaw wymiar�w, limits - zakres rozwiazan poczatkowych, mi - wielkosc pop pocza, lambda - wielkosc pop potomnej,
+    //sigma0 - odchylenie standardowe zmiany X
     solution *P = new solution[mi + lambda];
     solution *Pm = new solution[mi];
-    random_device rd;
-    default_random_engine gen;
+    random_device rd; //losowanie liczb o rozkladzie jednostajnym
+    default_random_engine gen; // losowanie liczb o rozkladzie normalnym
     gen.seed(static_cast<unsigned int>(chrono::system_clock::now().time_since_epoch().count()));
     normal_distribution<double> distr(0.0, 1.0);
-    matrix IFF(mi, 1), temp(N, 2);
+    matrix IFF(mi, 1), temp(N, 2); //IFF przystosowania
     double r, s, s_IFF;
-    double tau = pow(2 * N, -0.5), tau1 = pow(2 * pow(N, 0.5), -0.5);
-    int j_min;
-    for (int i = 0; i < mi; ++i)
+    double tau = pow(2 * N, -0.5), tau1 = pow(2 * pow(N, 0.5), -0.5); //zmienne wykorzystywane przy mutacji wektora sigma
+    int j_min; //indeks wartosci minimalnej
+    for (int i = 0; i < mi; ++i) //generacja poczatkowa zwiazana z mi
     {
-        P[i].x = matrix(N, 2);
+        P[i].x = matrix(N, 2); //kazde rozwiazanie to macierz Nx2 [x, sigma]
         for (int j = 0; j < N; ++j)
         {
-            P[i].x(j, 0) = (limits(j, 1) - limits(j, 0))*rand_mat(1, 1)() + limits(j, 0);
+            P[i].x(j, 0) = (limits(j, 1) - limits(j, 0))*rand_mat(1, 1)() + limits(j, 0); //losowanie wartosci jtej wspolrzednej rozwiazania
             P[i].x(j, 1) = sigma0(j);
         }
-        P[i].fit_fun(ud, ad);
-        if (P[i].y < epsilon)
+        P[i].fit_fun(ud, ad); //obliczenie wartosci funkcji celu dla itego rozwiazania
+        if (P[i].y < epsilon) //warunek stopu
             return P[i];
     }
     while (true)
     {
-        s_IFF = 0;
-        for (int i = 0; ???; ++i)
+        s_IFF = 0;//suma przystosowania populacji
+        for (int i = 0; i < mi; ++i)
         {
-            IFF(i) = ???
-            s_IFF += ???
+            IFF(i) = 1 / P[i].y(0); //odwrotnosc wartosci funkcji celu
+            s_IFF += IFF(i);
         }
-        for (int i = 0; ???; ++i)
+        //loswoanie lamda osobnikow metoda kola ruletki
+        for (int i = 0; i < lambda; ++i)
         {
-            r = ???
-            s = ???
-            for (int j = 0; ???; ++j)
+            r = s_IFF * rand_mat(1, 1)(); // losowanie wartosci z zakresu do 0 do s_IFF
+            s = 0;
+            for (int j = 0; j<mi; ++j)
             {
-                s += ???
-                if (???)
+                s += IFF(j);
+                if (r <= s)
                 {
-                    P[mi + i] = ???
+                    P[mi + i] = P[j];
                     break;
                 }
             }
         }
-        for (int i = 0; ???; ++i)
+        //mutacje
+        for (int i = 0; i < lambda; ++i)
         {
-            r = ???
-            for (int j = 0; ???; ++j)
+            r = distr(gen);
+            for (int j = 0; j<N; ++j)
             {
-                ???
-                ???
+                P[mi + i].x(j, 1) *= exp(tau1 * r + tau * distr(gen));//mutacja sigma
+                P[mi + i].x(j, 0) += P[mi + i].x(j, 1) * distr(gen);//mutacja x
             }
         }
-        for (int i = 0; ???; i += 2)
+        //krzyzowanie usredniajace
+        for (int i = 0; i < lambda; i += 2)
         {
-            r = ???
-            temp = P[mi + i].x;
-            P[mi + i].x = ???
-            P[mi + i + 1].x = ???
+            r = rand_mat(1, 1)();
+            temp = P[mi + i].x; //kopia osobnika
+            P[mi + i].x = r * P[mi + i].x + (1 - r) * P[mi + i + 1].x;
+            P[mi + i + 1].x = r * P[mi + i + 1].x + (1 - r) * temp;
         }
-        for (int i = 0; ???; ++i)
+
+        //ocena populacji potomnej
+        for (int i = 0; i<lambda; ++i)
         {
             P[mi + i].fit_fun(ud, ad);
-            if (???)
+            if (P[mi+i].y < epsilon)
                 return P[mi + i];
         }
-        for (int i = 0; ???; ++i)
+        for (int i = 0; i < mi; ++i)
         {
             j_min = 0;
-            for (int j = 1; ???; ++j)
-                if (???)
+            for (int j = 1; j < mi+lambda; ++j)
+                if (P[j_min].y > P[j].y)
                     j_min = j;
-            Pm[i] = ???
-            P[j_min].y = ???
+            Pm[i] = P[j_min];
+            P[j_min].y = 1e10;
         }
         for (int i = 0; i < mi; ++i)
             P[i] = Pm[i];
-        if (???)
+        if (solution::f_calls > Nmax)
             return P[0];
     }
 }

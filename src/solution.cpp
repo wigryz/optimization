@@ -103,25 +103,25 @@ void solution::fit_fun(matrix *ud, matrix *ad) {
     }
 #elif LAB_NO == 4 && LAB_PART == 2
     matrix Y0(4, new double[4]{ 0,x(0), 100, 0 });
-	matrix omega(x(1));
-	matrix* Y = solve_ode(0, 0.01, 7, Y0, &omega);
-	int n = get_len(Y[0]);
-	int i0 = 0, i50 = 0;
-	for (int i = 1; i < n; ++i)
-	{
-		if (abs(Y[1](i, 2) - 50) < abs(Y[1](i50, 2) - 50))
-			i50 = i;
-		if (abs(Y[1](i, 2)) < abs(Y[1](i0, 2)))
-			i0 = i;
-	}
-	y = -Y[1](i0, 0);
-	if (abs(x(0)) - 10 > 0)
-		y = y + (*ad)(0) * pow(abs(x(0)) - 10, 2);
-	if(abs(x(1) - 20 > 0))
-		y = y + (*ad)(0)*pow(abs(x(1))-20,2);
-	if (abs(Y[1](i50, 0) - 5) - 1 > 0)
-		y = y + (*ad)(0) * pow(abs(Y[1](i50, 0) - 5) - 1, 2);
-#elif LAB_NO==5 && (LAB_PART==1 || LAB_PART==2)
+    matrix omega(x(1));
+    matrix* Y = solve_ode(0, 0.01, 7, Y0, &omega);
+    int n = get_len(Y[0]);
+    int i0 = 0, i50 = 0;
+    for (int i = 1; i < n; ++i)
+    {
+        if (abs(Y[1](i, 2) - 50) < abs(Y[1](i50, 2) - 50))
+            i50 = i;
+        if (abs(Y[1](i, 2)) < abs(Y[1](i0, 2)))
+            i0 = i;
+    }
+    y = -Y[1](i0, 0);
+    if (abs(x(0)) - 10 > 0)
+        y = y + (*ad)(0) * pow(abs(x(0)) - 10, 2);
+    if(abs(x(1) - 20 > 0))
+        y = y + (*ad)(0)*pow(abs(x(1))-20,2);
+    if (abs(Y[1](i50, 0) - 5) - 1 > 0)
+        y = y + (*ad)(0) * pow(abs(Y[1](i50, 0) - 5) - 1, 2);
+#elif LAB_NO == 5 && (LAB_PART == 1 || LAB_PART == 2)
     if (ad == nullptr) //f(x)
         y = pow(x(0) + 2 * x(1) - 7, 2) + pow(2 * x(0) + x(1) - 5, 2);
     else {//g(x)
@@ -133,75 +133,86 @@ void solution::fit_fun(matrix *ud, matrix *ad) {
     }
 
 
-#elif LAB_NO==5 && LAB_PART==3
+#elif LAB_NO == 5 && LAB_PART == 3
     int m = 100, n = get_len(x); // x - theta
-	static matrix X(n, m), Y(1, m);
-	if (f_calls == 1) {
-		ifstream s("XData.txt");
-		s >> X;
-		s.close();
-		s.open("YData.txt");
-		s >> Y;
-		s.close();
-	}
-	double h;
-	y = 0;
+    static matrix X(n, m), Y(1, m);
+    if (f_calls == 1) {
+        ifstream s("XData.txt");
+        s >> X;
+        s.close();
+        s.open("YData.txt");
+        s >> Y;
+        s.close();
+    }
+    double h;
+    y = 0;
 
-	for (int i = 0; i < m; i++) {
-		h = (trans(x)*X[i])(); //h=theta^T*x
-		h = 1 / (1 + exp(-h)); // h = 1/(a+e^-h)
-		y = y - Y(0, i)*log(h) - (1 - Y(0, i))*log(1 - h);
-	}
-	y = y / m;
+    for (int i = 0; i < m; i++) {
+        h = (trans(x)*X[i])(); //h=theta^T*x
+        h = 1 / (1 + exp(-h)); // h = 1/(a+e^-h)
+        y = y - Y(0, i)*log(h) - (1 - Y(0, i))*log(1 - h);
+    }
+    y = y / m;
 
 #elif LAB_NO == 6 && LAB_PART == 1
 
 #elif LAB_NO == 6 && LAB_PART == 2
 
 #elif LAB_NO == 7 && LAB_PART == 1
-
+    y = pow(x(0), 2) + pow(x(1), 2) - cos(2.5 * 3.14 * x(0)) - cos(2.5 * 3.14 * x(1)) + 2;
 #elif LAB_NO == 7 && LAB_PART == 2
-
+    int N = 1001;
+    static matrix X(N, 2);
+    if (solution::f_calls == 1) {
+        ifstream S("polozenia.txt");
+        S >> X;
+        S.close();
+    }
+    matrix Y0(4, new double[4]{ 0,0,0,0 });
+    matrix* Y = solve_ode(0, 0.1, 100, Y0, &x);
+    y = 0;
+    for (int i = 0; i < N; ++i) {
+        y = y + abs(X(i, 0) - Y[1](i, 0)) + abs(X(i, 1) - Y[1](i, 2));
+    }
+    y = y / (2 * N);
 #endif
 }
 
-void solution::grad(matrix * ud, matrix * ad)
-{
+void solution::grad(matrix *ud, matrix *ad) {
     ++g_calls;
-#if LAB_NO==5 && (LAB_PART==1 || LAB_PART==2)
+#if LAB_NO == 5 && (LAB_PART == 1 || LAB_PART == 2)
     g = matrix(2, 1);
     g(0) = 10 * x(0) + 8 * x(1) - 34;
     g(1) = 8 * x(0) + 10 * x(1) - 38;
-#elif LAB_NO==5 && LAB_PART==3
+#elif LAB_NO == 5 && LAB_PART == 3
     int m = 100, n = get_len(x);
-	static matrix X(n, m), Y(1, m);
-	if(g_calls == 1){
-		ifstream s("XData.txt");
-		s >> X;
-		s.close();
-		s.open("YData.txt");
-		s >> Y;
-		s.close();
-	}
-	double h;
-	g = matrix(n, 1);
-	for (int j = 0; j < n; j++) {
-		for (int i = 0; i < m; i++) {
-			h = (trans(x)*X[i])();
-			h = 1 / (1 + exp(-h));
-			g(j) = g(j) + X(j, i)*(h - Y(0, i));
-		}
-		g(j) = g(j) / m;
-	}
+    static matrix X(n, m), Y(1, m);
+    if(g_calls == 1){
+        ifstream s("XData.txt");
+        s >> X;
+        s.close();
+        s.open("YData.txt");
+        s >> Y;
+        s.close();
+    }
+    double h;
+    g = matrix(n, 1);
+    for (int j = 0; j < n; j++) {
+        for (int i = 0; i < m; i++) {
+            h = (trans(x)*X[i])();
+            h = 1 / (1 + exp(-h));
+            g(j) = g(j) + X(j, i)*(h - Y(0, i));
+        }
+        g(j) = g(j) / m;
+    }
 
 
 #endif
 }
 
-void solution::hess(matrix * ud, matrix * ad)
-{
+void solution::hess(matrix *ud, matrix *ad) {
     ++H_calls;
-#if LAB_NO==5 && (LAB_PART==1 || LAB_PART==2)
+#if LAB_NO == 5 && (LAB_PART == 1 || LAB_PART == 2)
     H = matrix(2, 2);
     H(0, 0) = H(1, 1) = 10;
     H(0, 1) = H(1, 0) = 8;

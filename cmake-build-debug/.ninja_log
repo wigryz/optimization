@@ -1,0 +1,21 @@
+# ninja log v5
+0	475	1642768677264669558	CMakeFiles/optimization.dir/src/ode_solver.cpp.o	c069e8d3da53a02
+0	505	1642768677292669603	CMakeFiles/optimization.dir/src/main.cpp.o	ca367de40290714f
+1	653	1642768677440669843	CMakeFiles/optimization.dir/src/opt_alg.cpp.o	5fa9e8f21a8be799
+468	545	1642769071601008841	optimization	a6dd7cc546f33c75
+0	647	1642765036133301366	CMakeFiles/optimization.dir/src/matrix.cpp.o	a084a752946107ce
+1	468	1642769071525008821	CMakeFiles/optimization.dir/src/solution.cpp.o	7abe1898320b557
+1	609	1643133375799645235	CMakeFiles/optimization.dir/src/main.cpp.o	ca367de40290714f
+1	657	1643133375847645171	CMakeFiles/optimization.dir/src/matrix.cpp.o	a084a752946107ce
+2	681	1643133375871645140	CMakeFiles/optimization.dir/src/solution.cpp.o	7abe1898320b557
+2	686	1643133375875645135	CMakeFiles/optimization.dir/src/ode_solver.cpp.o	c069e8d3da53a02
+2	691	1643133375879645129	CMakeFiles/optimization.dir/src/opt_alg.cpp.o	5fa9e8f21a8be799
+691	781	1643133375971645009	optimization	a6dd7cc546f33c75
+1	411	1643133472051517518	CMakeFiles/optimization.dir/src/main.cpp.o	ca367de40290714f
+412	480	1643133472119517427	optimization	a6dd7cc546f33c75
+1	388	1643133952414288685	CMakeFiles/optimization.dir/src/ode_solver.cpp.o	c069e8d3da53a02
+1	398	1643133952426288616	CMakeFiles/optimization.dir/src/solution.cpp.o	7abe1898320b557
+398	468	1643133952494288227	optimization	a6dd7cc546f33c75
+1	403	1643134438176136715	CMakeFiles/optimization.dir/src/solution.cpp.o	7abe1898320b557
+1	429	1643134438204136618	CMakeFiles/optimization.dir/src/main.cpp.o	ca367de40290714f
+429	514	1643134438284136339	optimization	a6dd7cc546f33c75
